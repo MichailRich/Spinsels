@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Gedachtenspinsels</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR2VkYWNodGVuc3BpbnNlbHMiLCJzaG9ydF9uYW1lIjoiU3BpbnNlbHMiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBhMGEwZiIsInRoZW1lX2NvbG9yIjoiIzBhMGEwZiJ9">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --text: #e8e4df;
+    --text-dim: #8a8690;
+    --accent: #c4956a;
+    --accent-glow: #c4956a44;
+    --recording: #e05a5a;
+    --recording-glow: #e05a5a33;
+    --success: #6aad8e;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient background */
+  .ambient {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+    background: radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, #3a2a6a22 0%, transparent 50%);
+    transition: opacity 1.5s ease;
+  }
+
+  .ambient.recording {
+    opacity: 0.7;
+    background: radial-gradient(ellipse at 50% 50%, var(--recording-glow) 0%, transparent 40%),
+                radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 50%);
+    animation: ambientPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes ambientPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Header */
+  .header {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 1.5rem 1rem;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .header p {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Settings bar */
+  .settings {
+    position: relative;
+    z-index: 2;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .email-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid #ffffff0a;
+    border-radius: 12px;
+    padding: 0 1rem;
+    gap: 0.6rem;
+  }
+
+  .email-icon {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .email-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    padding: 0.85rem 0;
+  }
+
+  .email-input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
+  /* Content area */
+  .content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0 1.5rem;
+  }
+
+  .transcript-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem 0;
+    scrollbar-width: none;
+  }
+
+  .transcript-area::-webkit-scrollbar { display: none; }
+
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+    border: 1.5px solid var(--text-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+  }
+
+  .empty-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--text-dim);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .empty-state span {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .transcript-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .transcript-text .interim {
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Thoughts list */
+  .thought-item {
+    background: var(--surface);
+    border: 1px solid #ffffff08;
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    animation: slideIn 0.4s ease;
+    position: relative;
+  }
+
+  .thought-item .thought-time {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  .thought-item .thought-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .thought-item .thought-actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    justify-content: flex-end;
+  }
+
+  .thought-btn {
+    background: var(--surface2);
+    border: 1px solid #ffffff0a;
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    padding: 0.4rem 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .thought-btn:hover, .thought-btn:active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .thought-btn.delete {
+    color: #e05a5a88;
+  }
+
+  .thought-btn.delete:hover, .thought-btn.delete:active {
+    background: var(--recording);
+    color: white;
+    border-color: var(--recording);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Controls */
+  .controls {
+    position: relative;
+    z-index: 2;
+    padding: 1rem 1.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .record-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+
+  .record-btn::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-glow);
+    transition: all 0.3s;
+  }
+
+  .record-btn .inner {
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .record-btn.active {
+    border-color: var(--recording);
+    transform: scale(1.08);
+  }
+
+  .record-btn.active::before {
+    border-color: var(--recording-glow);
+    animation: ringPulse 2s ease-in-out infinite;
+  }
+
+  .record-btn.active .inner {
+    background: var(--recording);
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+  }
+
+  @keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.3; }
+  }
+
+  .record-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .record-label.active {
+    color: var(--recording);
+    animation: labelPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes labelPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .action-row {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 0.9rem;
+    border-radius: 12px;
+    border: 1px solid #ffffff0a;
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+  }
+
+  .action-btn:active {
+    transform: scale(0.97);
+  }
+
+  .action-btn.send {
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 500;
+    border-color: var(--accent);
+  }
+
+  .action-btn.send:active {
+    background: #b5855c;
+  }
+
+  .action-btn:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Status toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface2);
+    border: 1px solid #ffffff10;
+    border-radius: 12px;
+    padding: 0.8rem 1.4rem;
+    color: var(--text);
+    font-size: 0.82rem;
+    z-index: 100;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .toast.visible {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast.success { border-color: var(--success); color: var(--success); }
+  .toast.error { border-color: var(--recording); color: var(--recording); }
+
+  /* Unsupported message */
+  .unsupported {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .unsupported p {
+    color: var(--text-dim);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="ambient" id="ambient"></div>
+
+  <div class="header">
+    <h1>Gedachtenspinsels</h1>
+    <p>Spreek in · Verstuur per mail</p>
+  </div>
+
+  <div class="settings">
+    <div class="email-input-wrap">
+      <span class="email-icon">✉</span>
+      <input type="email" class="email-input" id="emailInput" placeholder="jouw@emailadres.nl" autocomplete="email" />
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="transcript-area" id="transcriptArea">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </div>
+        <span>Druk op de knop<br>en spreek je gedachte in</span>
+      </div>
+      <div id="thoughtsList"></div>
+      <div class="transcript-text" id="liveTranscript" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+      <div class="inner"></div>
+    </button>
+    <span class="record-label" id="recordLabel">Opnemen</span>
+    <div class="action-row">
+      <button class="action-btn" id="clearBtn" onclick="clearAll()" disabled>Wissen</button>
+      <button class="action-btn send" id="sendBtn" onclick="sendEmail()" disabled>Versturen ✉</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // State
+  let isRecording = false;
+  let recognition = null;
+  let thoughts = [];
+  let currentTranscript = '';
+  let interimTranscript = '';
+
+  // Elements
+  const recordBtn = document.getElementById('recordBtn');
+  const recordLabel = document.getElementById('recordLabel');
+  const ambient = document.getElementById('ambient');
+  const liveTranscript = document.getElementById('liveTranscript');
+  const thoughtsList = document.getElementById('thoughtsList');
+  const emptyState = document.getElementById('emptyState');
+  const sendBtn = document.getElementById('sendBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const emailInput = document.getElementById('emailInput');
+  const toast = document.getElementById('toast');
+
+  // Load saved email
+  try {
+    const savedEmail = localStorage.getItem('spinsels_email');
+    if (savedEmail) emailInput.value = savedEmail;
+  } catch(e) {}
+
+  emailInput.addEventListener('change', () => {
+    try { localStorage.setItem('spinsels_email', emailInput.value); } catch(e) {}
+  });
+
+  // Check speech recognition support
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    document.getElementById('app').innerHTML = `
+      <div class="unsupported">
+        <p>Je browser ondersteunt geen spraakherkenning.<br><br>
+        Open deze pagina in <strong>Chrome</strong> of <strong>Safari</strong> op je telefoon.</p>
+      </div>`;
+  } else {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'nl-NL';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = (event) => {
+      let interim = '';
+      let final = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          final += t;
+        } else {
+          interim += t;
+        }
+      }
+
+      if (final) {
+        currentTranscript += (currentTranscript ? ' ' : '') + final.trim();
+      }
+      interimTranscript = interim;
+      updateLiveTranscript();
+    };
+
+    recognition.onend = () => {
+      if (isRecording) {
+        // Auto-restart (speech recognition can stop unexpectedly)
+        try { recognition.start(); } catch(e) {}
+      } else {
+        finishRecording();
+      }
+    };
+
+    recognition.onerror = (e) => {
+      if (e.error === 'not-allowed') {
+        showToast('Geef microfoontoegang in je instellingen', 'error');
+        stopRecordingUI();
+      } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
+        console.log('Speech error:', e.error);
+      }
+    };
+  }
+
+  function toggleRecording() {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }
+
+  function startRecording() {
+    if (!recognition) return;
+    currentTranscript = '';
+    interimTranscript = '';
+    isRecording = true;
+
+    recordBtn.classList.add('active');
+    recordLabel.classList.add('active');
+    recordLabel.textContent = 'Luistert...';
+    ambient.classList.add('recording');
+    liveTranscript.style.display = 'block';
+    liveTranscript.innerHTML = '<span class="interim">Luistert...</span>';
+
+    try {
+      recognition.start();
+    } catch(e) {
+      recognition.stop();
+      setTimeout(() => recognition.start(), 100);
+    }
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    try { recognition.stop(); } catch(e) {}
+    stopRecordingUI();
+    finishRecording();
+  }
+
+  function stopRecordingUI() {
+    isRecording = false;
+    recordBtn.classList.remove('active');
+    recordLabel.classList.remove('active');
+    recordLabel.textContent = 'Opnemen';
+    ambient.classList.remove('recording');
+  }
+
+  function finishRecording() {
+    const text = (currentTranscript + (interimTranscript ? ' ' + interimTranscript : '')).trim();
+    interimTranscript = '';
+    currentTranscript = '';
+    liveTranscript.style.display = 'none';
+
+    if (text) {
+      const thought = {
+        id: Date.now(),
+        text: text,
+        time: new Date()
+      };
+      thoughts.push(thought);
+      renderThoughts();
+      showToast('Gedachte vastgelegd ✓', 'success');
+    }
+  }
+
+  function updateLiveTranscript() {
+    let html = '';
+    if (currentTranscript) html += currentTranscript;
+    if (interimTranscript) html += ' <span class="interim">' + interimTranscript + '</span>';
+    if (!html) html = '<span class="interim">Luistert...</span>';
+    liveTranscript.innerHTML = html;
+
+    // Auto-scroll
+    const area = document.getElementById('transcriptArea');
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function renderThoughts() {
+    emptyState.style.display = thoughts.length === 0 ? 'flex' : 'none';
+    sendBtn.disabled = thoughts.length === 0;
+    clearBtn.disabled = thoughts.length === 0;
+
+    thoughtsList.innerHTML = thoughts.map((t, i) => `
+      <div class="thought-item">
+        <div class="thought-time">${formatTime(t.time)}</div>
+        <div class="thought-text">${escapeHtml(t.text)}</div>
+        <div class="thought-actions">
+          <button class="thought-btn delete" onclick="deleteThought(${t.id})">Wis</button>
+        </div>
+      </div>
+    `).reverse().join('');
+
+    const area = document.getElementById('transcriptArea');
+    area.scrollTop = 0;
+  }
+
+  function deleteThought(id) {
+    thoughts = thoughts.filter(t => t.id !== id);
+    renderThoughts();
+  }
+
+  function clearAll() {
+    if (confirm('Alle gedachten wissen?')) {
+      thoughts = [];
+      renderThoughts();
+    }
+  }
+
+  function sendEmail() {
+    const email = emailInput.value.trim();
+    if (!email) {
+      showToast('Vul eerst je e-mailadres in', 'error');
+      emailInput.focus();
+      return;
+    }
+
+    if (thoughts.length === 0) {
+      showToast('Spreek eerst een gedachte in', 'error');
+      return;
+    }
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('nl-NL', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    const subject = `Gedachtenspinsels — ${dateStr}`;
+
+    let body = `Gedachtenspinsels\n${dateStr}\n${'─'.repeat(30)}\n\n`;
+
+    thoughts.forEach((t, i) => {
+      const time = formatTime(t.time);
+      body += `[${time}]\n${t.text}\n\n`;
+    });
+
+    body += `${'─'.repeat(30)}\nVerstuurd vanuit Gedachtenspinsels`;
+
+    const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
+
+    showToast('Mail wordt geopend...', 'success');
+  }
+
+  function formatTime(date) {
+    if (!(date instanceof Date)) date = new Date(date);
+    return date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function showToast(msg, type) {
+    toast.textContent = msg;
+    toast.className = 'toast ' + (type || '');
+    setTimeout(() => toast.classList.add('visible'), 10);
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  }
+</script>
+
+</body>
+</html>

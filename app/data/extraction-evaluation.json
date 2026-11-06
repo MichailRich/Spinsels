@@ -1,18 +1,40 @@
 {
- "generated": "2026-11-06T17:28:55.151Z",
+ "generated": "2026-11-06T18:03:34.398Z",
  "method": "Vergelijking extractie uit vonnistekst met straf genoemd in de inhoudsindicatie (Rechtspraak). Afwijkingen kunnen ook voortkomen uit onvolledige inhoudsindicaties.",
  "report": [
+  {
+   "component": "geldboete (euro)",
+   "vergeleken": 47,
+   "overeenstemming": 61.7,
+   "voorbeelden_afwijking": [
+    "ECLI:NL:RBDHA:2025:21847: inhoudsindicatie 8, extractie 450",
+    "ECLI:NL:RBNNE:2024:2026: inhoudsindicatie 10000, extractie 15000",
+    "ECLI:NL:RBDOR:2008:BC6022: inhoudsindicatie 3500, extractie 350",
+    "ECLI:NL:RBSGR:2011:BQ2016: inhoudsindicatie 250, extractie null",
+    "ECLI:NL:RBZUT:2011:BP5317: inhoudsindicatie 300, extractie 2250",
+    "ECLI:NL:RBZUT:2010:BO4051: inhoudsindicatie 750, extractie 2000",
+    "ECLI:NL:RBZUT:2009:BK4836: inhoudsindicatie 5000, extractie 9500",
+    "ECLI:NL:RBZUT:2008:BD2975: inhoudsindicatie 2500, extractie 250",
+    "ECLI:NL:RBZUT:2012:BV9956: inhoudsindicatie 9956, extractie 5000",
+    "ECLI:NL:RBZUT:2012:BV9960: inhoudsindicatie 9956, extractie 5000",
+    "ECLI:NL:RBZUT:2005:AU4020: inhoudsindicatie 44410, extractie 7980",
+    "ECLI:NL:RBAMS:2024:2703: inhoudsindicatie 830, extractie 1160",
+    "ECLI:NL:RBMNE:2019:3858: inhoudsindicatie 1500, extractie 750",
+    "ECLI:NL:RBAMS:2012:BW0634: inhoudsindicatie 1000, extractie 1100",
+    "ECLI:NL:RBALM:2005:AT9004: inhoudsindicatie 36150, extractie 69350"
+   ]
+  },
   {
    "component": "taakstraf (uren)",
    "vergeleken": 73,
    "overeenstemming": 87.7,
    "voorbeelden_afwijking": [
-    "ECLI:NL:RBNHO:2024:9306: inhoudsindicatie 30, extractie 40",
     "ECLI:NL:RBOVE:2024:7144: inhoudsindicatie 120, extractie 60",
     "ECLI:NL:RBAMS:2022:565: inhoudsindicatie 60, extractie null",
     "ECLI:NL:RBBRE:2008:BD2544: inhoudsindicatie 120, extractie 160",
-    "ECLI:NL:RBROT:2024:7443: inhoudsindicatie 90, extractie 94",
+    "ECLI:NL:RBNHO:2024:9306: inhoudsindicatie 30, extractie 40",
     "ECLI:NL:RBAMS:2024:2703: inhoudsindicatie 40, extractie null",
+    "ECLI:NL:RBROT:2024:7443: inhoudsindicatie 90, extractie 94",
     "ECLI:NL:RBROT:2022:12283: inhoudsindicatie 60, extractie 62",
     "ECLI:NL:RBDHA:2014:3541: inhoudsindicatie 80, extractie 40",
     "ECLI:NL:RBUTR:2002:AE0317: inhoudsindicatie 53, extractie 54"
@@ -27,37 +49,15 @@
     "ECLI:NL:RBDHA:2020:9663: inhoudsindicatie 90, extractie 170",
     "ECLI:NL:RBOVE:2021:789: inhoudsindicatie 9, extractie null",
     "ECLI:NL:RBDHA:2020:2766: inhoudsindicatie 56, extractie 70",
-    "ECLI:NL:RBROT:2018:11294: inhoudsindicatie 1642.5, extractie 270",
-    "ECLI:NL:RBLIM:2022:5233: inhoudsindicatie 365, extractie 120",
-    "ECLI:NL:RBOVE:2016:2933: inhoudsindicatie 1095, extractie null",
-    "ECLI:NL:RBLIM:2021:7045: inhoudsindicatie 30, extractie null",
     "ECLI:NL:RBOBR:2021:609: inhoudsindicatie 3, extractie 120",
-    "ECLI:NL:RBROT:2018:11293: inhoudsindicatie 1642.5, extractie null",
+    "ECLI:NL:RBOVE:2016:2933: inhoudsindicatie 1095, extractie null",
+    "ECLI:NL:RBLIM:2022:5233: inhoudsindicatie 365, extractie 120",
     "ECLI:NL:RBNHO:2013:7820: inhoudsindicatie 21, extractie 14",
     "ECLI:NL:RBROE:2006:AX9921: inhoudsindicatie 365, extractie null",
-    "ECLI:NL:RBDHA:2021:13175: inhoudsindicatie 180, extractie 270"
-   ]
-  },
-  {
-   "component": "geldboete (euro)",
-   "vergeleken": 47,
-   "overeenstemming": 61.7,
-   "voorbeelden_afwijking": [
-    "ECLI:NL:RBDHA:2025:21847: inhoudsindicatie 8, extractie 450",
-    "ECLI:NL:RBNNE:2024:2026: inhoudsindicatie 10000, extractie 15000",
-    "ECLI:NL:RBSGR:2011:BQ2016: inhoudsindicatie 250, extractie null",
-    "ECLI:NL:RBZUT:2011:BP5317: inhoudsindicatie 300, extractie 2250",
-    "ECLI:NL:RBZUT:2010:BO4051: inhoudsindicatie 750, extractie 2000",
-    "ECLI:NL:RBROT:2017:10297: inhoudsindicatie 500, extractie 5500",
-    "ECLI:NL:RBZUT:2009:BK4836: inhoudsindicatie 5000, extractie 9500",
-    "ECLI:NL:RBZUT:2008:BD2975: inhoudsindicatie 2500, extractie 250",
-    "ECLI:NL:RBZUT:2012:BV9956: inhoudsindicatie 9956, extractie 5000",
-    "ECLI:NL:RBZUT:2012:BV9960: inhoudsindicatie 9956, extractie 5000",
-    "ECLI:NL:RBZUT:2005:AU4020: inhoudsindicatie 44410, extractie 7980",
-    "ECLI:NL:RBAMS:2024:2703: inhoudsindicatie 830, extractie 1160",
-    "ECLI:NL:RBMNE:2019:3858: inhoudsindicatie 1500, extractie 750",
-    "ECLI:NL:RBAMS:2012:BW0634: inhoudsindicatie 1000, extractie 1100",
-    "ECLI:NL:RBALM:2005:AT9004: inhoudsindicatie 36150, extractie 69350"
+    "ECLI:NL:RBROT:2018:11293: inhoudsindicatie 1642.5, extractie null",
+    "ECLI:NL:RBDHA:2021:13175: inhoudsindicatie 180, extractie 270",
+    "ECLI:NL:RBLIM:2021:7045: inhoudsindicatie 30, extractie null",
+    "ECLI:NL:RBROT:2018:11294: inhoudsindicatie 1642.5, extractie 270"
    ]
   }
  ]

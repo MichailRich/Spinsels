@@ -5,6 +5,8 @@ import { currentUser } from "@/lib/auth";
 import { MobileNav } from "@/components/MobileNav";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL ?? "https://politierechter.nl"),
+  openGraph: { siteName: "Politierechter.nl", locale: "nl_NL", type: "website" },
   title: { default: "Politierechter.nl — Wat straft de politierechter?", template: "%s · Politierechter.nl" },
   description: "Doorzoek Nederlandse politierechterzaken. Vergelijk opgelegde straffen en ontdek welke omstandigheden het oordeel beïnvloeden.",
 };
@@ -65,6 +67,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="label mb-2">Belangrijk</div>
               <p>Niet alle politierechterzaken worden gepubliceerd. De gepubliceerde uitspraken vormen <strong>geen representatieve steekproef</strong> van alle behandelde zaken. <Link className="underline" href="/over">Lees de verantwoording</Link>.</p>
             </div>
+          </div>
+          <div className="container-x flex flex-wrap gap-4 border-t border-[var(--line)] py-4 text-xs text-[var(--ink-3)]">
+            <Link href="/voorwaarden" className="hover:underline">Disclaimer &amp; voorwaarden</Link>
+            <Link href="/privacy" className="hover:underline">Privacy</Link>
+            <Link href="/over" className="hover:underline">Verantwoording</Link>
           </div>
         </footer>
       </body>

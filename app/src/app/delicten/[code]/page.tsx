@@ -12,7 +12,12 @@ import { lovsFor } from "@/lib/reference/lovs";
 type P = { params: Promise<{ code: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 
 export async function generateMetadata({ params }: P) {
-  return { title: OFFENSE_BY_CODE.get((await params).code)?.label ?? "Delict" };
+  const o = OFFENSE_BY_CODE.get((await params).code);
+  if (!o) return { title: "Delict" };
+  const { total } = await searchCases({ cat: [o.code] }, { pageSize: 1 });
+  const title = `${o.label}: welke straf geeft de politierechter?`;
+  const description = `Bekijk ${total} gepubliceerde politierechteruitspraken over ${o.label.toLowerCase()}: opgelegde straffen, de eis van het OM en de invloed van recidive, letsel en andere omstandigheden.`;
+  return { title, description, openGraph: { title, description }, alternates: { canonical: `/delicten/${o.code}` } };
 }
 
 export default async function OffensePage({ params, searchParams }: P) {

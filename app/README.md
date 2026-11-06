@@ -99,3 +99,11 @@ Openstaand / aanbevolen:
 4. pgvector-embeddings (schema aanwezig, `VOYAGE_API_KEY`) voor semantisch zoeken.
 5. Domeinnaam- en merkcontrole; privacyverklaring en gebruiksvoorwaarden.
 6. Rate limiting via gedeelde opslag bij meerdere instanties.
+
+## Screenshots
+
+![Home](docs/screenshots/1-home.png)
+![Statistieken](docs/screenshots/2-statistieken.png)
+![Delict](docs/screenshots/3-delict-mishandeling.png)
+![Uitspraak](docs/screenshots/4-uitspraak.png)
+![Vergelijker](docs/screenshots/5-vergelijker.png)
